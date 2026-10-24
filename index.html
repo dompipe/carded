@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta name="theme-color" content="#f5f8fc" />
+  <title>Card Grader v2</title>
+  <link rel="stylesheet" href="styles.css?v=20261023-camera2" />
+</head>
+<body>
+  <div id="app">
+    <div class="build-tag">CARD GRADER v2.0.0</div>
+
+    <header class="hero">
+      <h1>Card Grader</h1>
+      <p>Centering · Corners · Edges · Surface</p>
+    </header>
+
+    <section class="panel" id="capture">
+      <div class="row">
+        <button type="button" class="btn primary" id="btn-camera">Camera</button>
+        <label class="btn secondary" for="file-input">Upload</label>
+        <input id="file-input" type="file" accept="image/*" hidden />
+      </div>
+      <video id="cam" autoplay playsinline muted hidden aria-label="Live camera preview"></video>
+      <button type="button" class="btn primary wide" id="btn-shutter" hidden>Capture</button>
+      <p class="status" id="status" aria-live="polite"></p>
+    </section>
+
+    <section id="workspace" hidden>
+      <!-- Card first -->
+      <section class="panel" id="card-panel">
+        <h2 class="panel-title">Card</h2>
+        <div class="stage" id="stage">
+          <canvas id="canvas"></canvas>
+          <svg id="guides"></svg>
+        </div>
+        <div class="toggles">
+          <label><input type="checkbox" id="tog-physical" checked /> Physical</label>
+          <label><input type="checkbox" id="tog-border" checked /> Printed border</label>
+        </div>
+        <p class="hint">Drag large inward handles — they sit inside the card so thumbs stay off the corners.</p>
+      </section>
+
+      <!-- Subgrades under card -->
+      <section class="panel grades" id="grades">
+        <h2 class="panel-title">Subgrades</h2>
+        <p class="hint">BGS-style categories. Provisional only — not a professional grade.</p>
+        <div class="overall">
+          <span class="lbl">Overall</span>
+          <span class="num" id="g-overall">—</span>
+          <p class="why" id="g-overall-why"></p>
+        </div>
+        <div class="grid2">
+          <div class="sg">
+            <div class="sg-top"><span>Centering</span><strong id="g-cen">—</strong></div>
+            <p class="why" id="g-cen-why">Set both guide sets. Starts at 50/50.</p>
+          </div>
+          <div class="sg">
+            <div class="sg-top"><span>Corners</span><strong id="g-cor">—</strong></div>
+            <p class="why" id="g-cor-why">From all four corners.</p>
+          </div>
+          <div class="sg">
+            <div class="sg-top"><span>Edges</span><strong id="g-edg">—</strong></div>
+            <p class="why" id="g-edg-why">From all four edges.</p>
+          </div>
+          <div class="sg">
+            <div class="sg-top"><span>Surface</span><strong id="g-sur">—</strong></div>
+            <p class="why" id="g-sur-why">Texture estimate.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="row actions">
+        <button type="button" class="btn primary" id="btn-grade">Score subgrades</button>
+        <button type="button" class="btn accent" id="btn-dl">Download label</button>
+        <button type="button" class="btn ghost" id="btn-reset">New image</button>
+      </div>
+
+      <!-- Loupe -->
+      <section class="panel">
+        <h2 class="panel-title" id="loupe-title">Top-left</h2>
+        <div class="tabs" id="tabs">
+          <button type="button" data-r="top-left" class="on">TL</button>
+          <button type="button" data-r="top-right">TR</button>
+          <button type="button" data-r="bottom-right">BR</button>
+          <button type="button" data-r="bottom-left">BL</button>
+          <button type="button" data-r="top">Top</button>
+          <button type="button" data-r="right">Right</button>
+          <button type="button" data-r="bottom">Bot</button>
+          <button type="button" data-r="left">Left</button>
+        </div>
+        <div class="loupe" id="loupe-wrap">
+          <canvas id="loupe"></canvas>
+        </div>
+        <div class="row zoom-row">
+          <button type="button" class="btn icon" id="z-out">−</button>
+          <input type="range" id="z-range" min="2" max="30" step="0.5" value="11" />
+          <button type="button" class="btn icon" id="z-in">+</button>
+          <span id="z-label">11× nearest</span>
+        </div>
+        <p class="hint">Nearest-neighbor from original pixels. Crop padded inward from the edge.</p>
+        <button type="button" class="btn secondary wide" id="btn-region">Analyze this region</button>
+        <article class="region-result" id="region-result" hidden>
+          <div class="sg-top"><span>Region score</span><strong id="r-score">—</strong></div>
+          <p class="why" id="r-why"></p>
+          <ul id="r-warn"></ul>
+        </article>
+      </section>
+    </section>
+
+    <footer class="foot">Source pixels · Nearest-neighbor · Local processing</footer>
+  </div>
+  <script src="/config.js"></script>
+  <script src="app.js?v=20261023-camera2"></script>
+</body>
+</html>

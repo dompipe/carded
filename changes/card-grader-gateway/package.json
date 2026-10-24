@@ -1,0 +1,12 @@
+{
+  "name": "card-grader-gateway",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Same-origin gateway for the Card Grader frontend and Python API",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -73,7 +73,16 @@
     state.border = { tl: { x: 0.1, y: 0.1 }, tr: { x: 0.9, y: 0.1 }, br: { x: 0.9, y: 0.9 }, bl: { x: 0.1, y: 0.9 } };
     absGuides();
 
-    status("Uploading…");
+    // Render the selected photo immediately. Do not make the visible card wait
+    // for the Python upload/API, which may be slow or unreachable.
+    $("workspace").hidden = false;
+    fit();
+    draw();
+    drawGuides();
+    requestLoupe();
+    URL.revokeObjectURL(url);
+
+    status("Card loaded locally. Connecting to grading API…");
     const fd = new FormData();
     fd.append("file", file, file.name || "card.jpg");
     try {
@@ -91,12 +100,6 @@
       status("API offline — loupe is client-only. " + e.message);
     }
 
-    $("workspace").hidden = false;
-    fit();
-    draw();
-    drawGuides();
-    requestLoupe();
-    URL.revokeObjectURL(url);
   }
 
   function fit() {

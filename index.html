@@ -19,7 +19,7 @@
 
     <section class="panel" id="capture">
       <div class="row">
-        <button type="button" class="btn primary" id="btn-camera">Camera</button>
+        <button type="button" class="btn primary" id="btn-camera" onclick="if (!window.CARD_GRADER_APP_READY) { document.getElementById('status').textContent='JavaScript did not initialize; opening the phone camera chooser.'; document.getElementById('camera-input').click(); }">Camera</button>
         <button type="button" class="btn secondary" id="btn-upload" onclick="document.getElementById('file-input').click()">Upload</button>
         <input id="file-input" type="file" accept="image/*" hidden />
         <input id="camera-input" type="file" accept="image/*" capture="environment" hidden />
@@ -114,6 +114,6 @@
     <footer class="foot">Source pixels · Nearest-neighbor · Local processing</footer>
   </div>
   <script src="/config.js"></script>
-  <script src="/app.js?v=20261023-fix5" onerror="document.getElementById('status').textContent='App JavaScript failed to load. Check that app.js is beside index.html and served from the website root.'"></script>
+  <script src="/app.js?v=20261023-fix6" onerror="document.getElementById('status').textContent='App JavaScript failed to load. Check that app.js is beside index.html and served from the website root.'"></script>
 </body>
 </html>

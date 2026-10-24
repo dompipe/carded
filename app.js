@@ -422,11 +422,26 @@
   }
 
   // events
-  $("file-input").addEventListener("change", (e) => {
-    const input = e.currentTarget;
-    const f = input.files?.[0];
-    if (f) loadFile(f).catch((err) => status("Image error: " + (err.message || err)));
+  function openPhotoPicker(useCamera) {
+    const input = $(useCamera ? "camera-input" : "file-input");
+    if (!input) {
+      status("Photo picker is unavailable. Refresh the page and try again.");
+      return;
+    }
+    // Reset first so choosing the same photo twice still fires change.
     input.value = "";
+    input.click();
+  }
+
+  ["file-input", "camera-input"].forEach((id) => {
+    const input = $(id);
+    if (!input) return;
+    input.addEventListener("change", (e) => {
+      const target = e.currentTarget;
+      const file = target.files && target.files[0];
+      if (file) loadFile(file).catch((err) => status("Image error: " + (err.message || err)));
+      target.value = "";
+    });
   });
   function stopCamera() {
     if (stream) {
@@ -457,12 +472,13 @@
 
   $("btn-camera").addEventListener("click", async () => {
     stopCamera();
-    if (!window.isSecureContext) {
-      status(cameraErrorMessage({ name: "SecurityError" }));
-      return;
-    }
-    if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== "function") {
-      status(cameraErrorMessage());
+    // Android browsers sometimes expose no getUserMedia despite HTTPS.
+    // Fall back to the OS camera/photo chooser rather than leaving Camera inert.
+    if (!window.isSecureContext ||
+        !navigator.mediaDevices ||
+        typeof navigator.mediaDevices.getUserMedia !== "function") {
+      status("Opening your phone's camera/photo chooser…");
+      openPhotoPicker(true);
       return;
     }
     const button = $("btn-camera");
@@ -482,7 +498,10 @@
       status("Camera ready. Position the card and tap Capture.");
     } catch (e) {
       stopCamera();
-      status(cameraErrorMessage(e));
+      status(cameraErrorMessage(e) + " Opening the phone's camera/photo chooser…");
+      // Still offer a working capture route when browser camera permission/API
+      // is blocked by the embedded browser or site permission state.
+      openPhotoPicker(true);
     } finally {
       button.disabled = false;
     }

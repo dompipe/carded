@@ -1,7 +1,7 @@
 /* Card Grader v2.0.1 — mobile camera and file picker fix */
 (function () {
   "use strict";
-  const API = window.CARD_GRADER_API || "http://localhost:8000";
+  const API = String(window.CARD_GRADER_API || window.location.origin).replace(/\/+$/, "");
   const $ = (id) => document.getElementById(id);
 
   const state = {

@@ -435,12 +435,33 @@
 
   ["file-input", "camera-input"].forEach((id) => {
     const input = $(id);
-    if (!input) return;
-    input.addEventListener("change", (e) => {
+    if (!input) {
+      console.error("Card Grader: missing file input #" + id);
+      return;
+    }
+    input.addEventListener("change", async (e) => {
       const target = e.currentTarget;
       const file = target.files && target.files[0];
-      if (file) loadFile(file).catch((err) => status("Image error: " + (err.message || err)));
-      target.value = "";
+      if (!file) {
+        status("No photo was selected.");
+        return;
+      }
+
+      // Give immediate feedback before image decoding or the API request.
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+      status("Photo selected: " + (file.name || "image") + " (" + sizeMB + " MB). Loading…");
+      try {
+        if (file.type && !file.type.startsWith("image/")) {
+          throw new Error("That file is not recognized as an image. Choose a JPG, PNG, or WebP photo.");
+        }
+        await loadFile(file);
+      } catch (err) {
+        console.error("Card Grader file handler failed:", err);
+        status("Could not load photo: " + (err && err.message ? err.message : String(err)));
+      } finally {
+        // Clear only after loadFile has consumed the selected File object.
+        target.value = "";
+      }
     });
   });
   function stopCamera() {

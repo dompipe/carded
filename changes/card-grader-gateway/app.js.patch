@@ -1,0 +1,5 @@
+--- a/app.js
++++ b/app.js
+@@
+-const API = window.CARD_GRADER_API || "http://localhost:8000";
++const API = String(window.CARD_GRADER_API || window.location.origin).replace(/\/+$/, "");

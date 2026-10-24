@@ -568,4 +568,6 @@
   });
 
   status("Upload a card photo to begin.");
+  // Inline button fallbacks stay active until all event handlers initialize.
+  window.CARD_GRADER_APP_READY = true;
 })();

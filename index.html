@@ -22,6 +22,7 @@
         <button type="button" class="btn primary" id="btn-camera">Camera</button>
         <button type="button" class="btn secondary" id="btn-upload" onclick="document.getElementById('file-input').click()">Upload</button>
         <input id="file-input" type="file" accept="image/*" hidden />
+        <input id="camera-input" type="file" accept="image/*" capture="environment" hidden />
       </div>
       <video id="cam" autoplay playsinline muted hidden aria-label="Live camera preview"></video>
       <button type="button" class="btn primary wide" id="btn-shutter" hidden>Capture</button>

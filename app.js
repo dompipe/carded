@@ -80,8 +80,12 @@
       const r = await fetch(`${API}/upload`, { method: "POST", body: fd });
       if (!r.ok) throw new Error(await r.text());
       const j = await r.json();
-      state.sessionId = j.session_id;
-      status(`${j.width}×${j.height} ready`);
+      // Accept the common session-id spellings used by Python API wrappers.
+      state.sessionId = j.session_id || j.sessionId || j.session?.id || j.id || null;
+      if (!state.sessionId) {
+        throw new Error("Upload endpoint responded, but did not return a session ID. Expected session_id in its JSON response.");
+      }
+      status(`${j.width || state.imgW}×${j.height || state.imgH} ready — grading API connected`);
     } catch (e) {
       state.sessionId = null;
       status("API offline — loupe is client-only. " + e.message);
@@ -322,7 +326,7 @@
   }
 
   async function gradeAll() {
-    if (!state.sessionId) return status("Upload a card first (API required).");
+    if (!state.sessionId) return status("Grading unavailable: the upload API has not supplied a session ID. Check the upload status above; if it says API offline, the Python API/proxy is unreachable.");
     status("Scoring subgrades…");
     try {
       const r = await fetch(`${API}/grade`, {
@@ -355,7 +359,7 @@
   }
 
   async function downloadLabel() {
-    if (!state.sessionId) return status("API required.");
+    if (!state.sessionId) return status("Region analysis unavailable: the upload API has not supplied a session ID. Check the upload status above; if it says API offline, the Python API/proxy is unreachable.");
     status("Building label…");
     try {
       const r = await fetch(`${API}/report-card`, {

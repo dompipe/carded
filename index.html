@@ -20,7 +20,7 @@
     <section class="panel" id="capture">
       <div class="row">
         <button type="button" class="btn primary" id="btn-camera">Camera</button>
-        <label class="btn secondary" for="file-input">Upload</label>
+        <button type="button" class="btn secondary" id="btn-upload" onclick="document.getElementById('file-input').click()">Upload</button>
         <input id="file-input" type="file" accept="image/*" hidden />
       </div>
       <video id="cam" autoplay playsinline muted hidden aria-label="Live camera preview"></video>
@@ -113,6 +113,6 @@
     <footer class="foot">Source pixels · Nearest-neighbor · Local processing</footer>
   </div>
   <script src="/config.js"></script>
-  <script src="app.js?v=20261023-fix3"></script>
+  <script src="/app.js?v=20261023-fix4" onerror="document.getElementById('status').textContent='App JavaScript failed to load. Check that app.js is beside index.html and served from the website root.'"></script>
 </body>
 </html>
